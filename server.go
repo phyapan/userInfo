@@ -89,21 +89,18 @@ func main() {
 			fmt.Fprintf(w, "Saved!")
 		})
 
-		// Simple email validation function
-	}
-
-	func isValidEmail(email string) bool {
-		if len(email) < 3 || len(email) > 254 {
-			return false
-		}
-		for i := 0; i < len(email); i++ {
-			if email[i] == '@' {
-				return true
-			}
-		}
-		return false
-	}
-
 	fmt.Println("Server running on :8080")
 	http.ListenAndServe(":8080", nil)
+}
+
+func isValidEmail(email string) bool {
+	if len(email) < 3 || len(email) > 254 {
+		return false
+	}
+	for i := 0; i < len(email); i++ {
+		if email[i] == '@' {
+			return true
+		}
+	}
+	return false
 }
