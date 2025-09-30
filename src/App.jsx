@@ -1,6 +1,22 @@
 
 import { useState } from 'react';
 import './App.css';
+// Firebase imports
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+
+// TODO: Replace with your Firebase config
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function App() {
   const [form, setForm] = useState({
@@ -19,18 +35,13 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(form).toString(),
+      await addDoc(collection(db, "users"), {
+        name: form.name,
+        age: form.age,
+        email: form.email,
+        contact: form.contact
       });
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        alert('Failed to submit data');
-      }
+      setSubmitted(true);
     } catch (error) {
       alert('Error submitting data');
     }
